@@ -65,7 +65,7 @@ public class Terrarium extends JComponent {
 		int pxlHeight = (HEIGHT * pixels) + 2;
 		setPreferredSize(new Dimension(pxlWidth, pxlHeight));
 		
-		map = new TMap(WIDTH, HEIGHT);
+		//map = new TMap(WIDTH, HEIGHT);
 	}
 
 	/*
@@ -89,7 +89,7 @@ public class Terrarium extends JComponent {
 		startButton.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Start the game!");
-				//startGame();
+				startGame();
 			}
 		});
 		
@@ -99,7 +99,7 @@ public class Terrarium extends JComponent {
 		stopButton.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Stop the game!");
-				//stopGame();
+				stopGame();
 			}
 		});
 		
@@ -134,6 +134,43 @@ public class Terrarium extends JComponent {
 	}
 
 	/*
+	 Sets the internal state and starts the timer
+	 so the game is happening.
+	*/
+	public void startGame() {
+		// cheap way to reset the board state
+		map = new TMap(WIDTH, HEIGHT);
+		
+		// draw the new board state once
+		// repaint();
+		
+		gameOn = true;
+		
+		// Set mode based on checkbox at start of game
+		testMode = testButton.isSelected();
+		
+		if (testMode) random = new Random(0);	// same seq every time
+		else random = new Random(); // diff seq each game
+		
+		enableButtons();
+		timeLabel.setText(" ");
+
+		// play game
+
+		//timer.start();
+		startTime = System.currentTimeMillis();
+	}
+
+	/*
+	 * Stops the game.
+	*/
+	public void stopGame() {
+		gameOn = false;
+		enableButtons();
+		//timer.stop();
+	}
+
+	/*
 	 * Sets the enabling of the start/stop buttons
 	 * based on the gameOn state.
 	*/
@@ -142,6 +179,19 @@ public class Terrarium extends JComponent {
 		stopButton.setEnabled(gameOn);
 	}
 
+	/*
+	 * Adds a quit button to the given control panel
+	 */
+	public void addQuit(JComponent controls) {
+		controls.add(Box.createVerticalStrut(12));
+		JButton quit = new JButton("Quit");
+		controls.add(quit);
+		quit.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+	}
 
 	/*
 	 * Creates and returns a frame around the given Terrarium.
@@ -160,14 +210,7 @@ public class Terrarium extends JComponent {
 		container.add(controls, BorderLayout.EAST);
 		 
 		// Add the quit button last so it's at the bottom
-		controls.add(Box.createVerticalStrut(12));
-		JButton quit = new JButton("Quit");
-		controls.add(quit);
-		quit.addActionListener( new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		terrarium.addQuit(controls);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
