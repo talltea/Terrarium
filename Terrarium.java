@@ -49,7 +49,8 @@ public class Terrarium extends JComponent {
 	protected JCheckBox testButton;
 	
 	// milliseconds per tick
-	public final int DELAY = 400;
+	public final int DELAY = 1000;
+	private int timeCounter = 0;
 	
 	/**
 	 * Creates a new Terrarium where each cell
@@ -65,7 +66,21 @@ public class Terrarium extends JComponent {
 		int pxlHeight = (HEIGHT * pixels) + 2;
 		setPreferredSize(new Dimension(pxlWidth, pxlHeight));
 		
-		//map = new TMap(WIDTH, HEIGHT);
+		/* 
+		 * Create the Timer object and have it update the world
+		 */ 
+		ActionListener tickTock = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tickWorld();
+			}
+		};
+		timer = new javax.swing.Timer(DELAY, tickTock);
+
+		requestFocusInWindow();
+	}
+
+	private void tickWorld() {
+		System.out.println("tickWorld");
 	}
 
 	/*
@@ -113,16 +128,14 @@ public class Terrarium extends JComponent {
 		speed = new JSlider(0, 200, 75);	// min, max, current
 		speed.setPreferredSize(new Dimension(100, 15));
 		
-		System.out.println("Tick Tock");
-		// updateTimer();
+		updateTimer();
 		row.add(speed);
 		
 		panel.add(row);
 		speed.addChangeListener( new ChangeListener() {
 			// when the slider changes, sync the timer to its value
 			public void stateChanged(ChangeEvent e) {
-				System.out.println("Tick Tock");
-				//updateTimer();
+				updateTimer();
 			}
 		});
 		
@@ -131,6 +144,15 @@ public class Terrarium extends JComponent {
 		
 		
 		return panel;
+	}
+
+	/*
+	 * Updates the timer to reflect the current setting of the 
+	 * speed slider.
+	 */
+	public void updateTimer() {
+		double value = ((double)speed.getValue())/speed.getMaximum();
+		timer.setDelay((int)(DELAY - value*DELAY));
 	}
 
 	/*
@@ -157,7 +179,7 @@ public class Terrarium extends JComponent {
 
 		// play game
 
-		//timer.start();
+		timer.start();
 		startTime = System.currentTimeMillis();
 	}
 
@@ -167,7 +189,7 @@ public class Terrarium extends JComponent {
 	public void stopGame() {
 		gameOn = false;
 		enableButtons();
-		//timer.stop();
+		timer.stop();
 	}
 
 	/*
