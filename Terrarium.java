@@ -52,9 +52,10 @@ public class Terrarium extends JComponent {
 	public final int DELAY = 1000;
 	private int timeCounter = 0;
 	
-	/**
+	/*
 	 * Creates a new Terrarium where each cell
 	 * is drawn with the given number of pixels.
+	 * Creates the timer object, but doesn't start it
 	 */
 	Terrarium(int pixels) {
 		super();
@@ -65,40 +66,52 @@ public class Terrarium extends JComponent {
 		int pxlWidth = (WIDTH * pixels) + 2;
 		int pxlHeight = (HEIGHT * pixels) + 2;
 		setPreferredSize(new Dimension(pxlWidth, pxlHeight));
-		
-		/* 
-		 * Create the Timer object and have it update the world
-		 */ 
+		requestFocusInWindow();
+
+		// Create the Timer object and have it update the world
 		ActionListener tickTock = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tickWorld();
 			}
 		};
 		timer = new javax.swing.Timer(DELAY, tickTock);
-
-		requestFocusInWindow();
-	}
-
-	private void tickWorld() {
-		System.out.println("tickWorld");
 	}
 
 	/*
-	 * Creates the panel of UI controls -- controls wired
-	 * up to call methods on the Terrarium.
-	*/
-	public JComponent createControlPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	 * Updates the world and draws it every tick
+	 */
+	private void tickWorld() {
+		drawTime();
+		map.update();
+		redraw();
+	}
 
-		
-		// TIME 
-		timeLabel = new JLabel("time ");
+	/*
+	 * Updatest the time label
+	 */
+	private void drawTime() {
+		long delta = (System.currentTimeMillis() - startTime);
+		timeLabel.setText(Double.toString(delta/1000.0) + " seconds");
+	}
+
+
+	/*
+	 * Draws the current state of the map to the frame
+	 */
+	private void redraw() {
+		/**
+		TODO
+		*/
+	}
+
+
+	private void drawTimeLabel(JPanel panel) {
+		timeLabel = new JLabel(" ");
 		panel.add(timeLabel);
-
 		panel.add(Box.createVerticalStrut(TIME_SPACING));
-		
-		// START button
+	}
+
+	private void drawStartButton(JPanel panel) {
 		startButton = new JButton("Start");
 		panel.add(startButton);
 		startButton.addActionListener( new ActionListener() {
@@ -107,8 +120,9 @@ public class Terrarium extends JComponent {
 				startGame();
 			}
 		});
-		
-		// STOP button
+	}
+
+	private void drawStopButton(JPanel panel) {
 		stopButton = new JButton("Stop");
 		panel.add(stopButton);
 		stopButton.addActionListener( new ActionListener() {
@@ -117,9 +131,9 @@ public class Terrarium extends JComponent {
 				stopGame();
 			}
 		});
-		
-		enableButtons();
-		
+	}
+
+	private void drawSlider(JPanel panel) { 
 		JPanel row = new JPanel();
 		
 		// SPEED slider
@@ -138,10 +152,27 @@ public class Terrarium extends JComponent {
 				updateTimer();
 			}
 		});
+
+	}
+
+	/*
+	 * Creates the panel of UI controls -- controls wired
+	 * up to call methods on the Terrarium.
+	*/
+	public JComponent createControlPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		drawTimeLabel(panel);
+
+		drawStartButton(panel);
+		drawStopButton(panel);
+		enableButtons();
+		
+		drawSlider(panel);
 		
 		testButton = new JCheckBox("Test sequence");
 		panel.add(testButton);
-		
 		
 		return panel;
 	}
