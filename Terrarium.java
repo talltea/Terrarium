@@ -83,7 +83,7 @@ public class Terrarium extends JComponent {
 	private void tickWorld() {
 		drawTime();
 		map.update();
-		redraw();
+		repaint();
 	}
 
 	/*
@@ -98,10 +98,21 @@ public class Terrarium extends JComponent {
 	/*
 	 * Draws the current state of the map to the frame
 	 */
-	private void redraw() {
-		/**
-		TODO
-		*/
+	public void paintComponent(Graphics g) {
+		
+		// Draw a rect around the whole thing
+		g.drawRect(0, 0, getWidth()-1, getHeight()-1);
+				
+		int mWidth = WIDTH * PIXEL_PER_CELL;
+		int mHeight = HEIGHT * PIXEL_PER_CELL;
+
+		// Loop through and draw all the blocks
+		for (int row = 0; row < mHeight; row++) {			
+			for (int col = 0; col < mHeight; col++) {
+				g.setColor(new Color((int)(Math.random() * 0x1000000)));
+				g.fillRect(1 + col*PIXEL_PER_CELL, 1 + row*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
+			}
+		} 
 	}
 
 
@@ -195,8 +206,7 @@ public class Terrarium extends JComponent {
 		map = new TMap(WIDTH, HEIGHT);
 		
 		// draw the new board state once
-		// repaint();
-		
+		repaint();
 		gameOn = true;
 		
 		// Set mode based on checkbox at start of game
@@ -209,7 +219,6 @@ public class Terrarium extends JComponent {
 		timeLabel.setText(" ");
 
 		// play game
-
 		timer.start();
 		startTime = System.currentTimeMillis();
 	}
