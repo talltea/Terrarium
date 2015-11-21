@@ -16,7 +16,7 @@
 public class TMap {
 	private int width;
 	private int height;
-	private int[][] map;
+	private Critter[][] map;
 
 	private boolean DEBUG = true;
 
@@ -28,11 +28,11 @@ public class TMap {
 	public TMap(int width, int height) {
 		this.width = width;
 		this.height = height;
-		map = new int[width][height];
+		map = new Critter[width][height];
 
 		for(int row = 0; row < height; row++) {
 			for(int col = 0; col < width; col++) {
-				map[row][col] = 0;
+				map[row][col] = null;
 			}
 		}
 	}
@@ -58,9 +58,9 @@ public class TMap {
 	 * Blocks outside of the valid width/height area
 	 * always return null.
 	 */
-	public int getGrid(int x, int y) {
-		if(x>=width || y >= height) return 0;
+	public Critter getGrid(int x, int y) {
 		return map[x][y];
+		//return null;
 	}
 
 	public void update() {

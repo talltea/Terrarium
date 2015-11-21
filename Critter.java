@@ -13,11 +13,29 @@
  * about the enhabitants in the game.
  */
 
+import java.util.*;
+import java.awt.*;
+
 public class Critter {
     private int health;
+    private Color color;
+    private static int counter = 0;
 
     public Critter() {
-	System.out.println("You've made a new critter!");
+		health = 0;
+        counter++;
+        if (counter%7 == 0) {
+    		color = Color.GREEN;
+        } else { 
+            color = Color.RED;
+        }
     }
 
+    public void setColor(Color color) {
+    	this.color = color;
+    }
+
+    public Color getColor() {
+    	return color;
+    }
 }

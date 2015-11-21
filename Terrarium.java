@@ -60,6 +60,7 @@ public class Terrarium extends JComponent {
 	Terrarium(int pixels) {
 		super();
 		gameOn = false;
+		map = new TMap(WIDTH, HEIGHT);
 
 		// Set component size to allow given pixels for each block plus
 		// a 1 pixel border around the whole thing.
@@ -105,11 +106,16 @@ public class Terrarium extends JComponent {
 				
 		int mWidth = WIDTH * PIXEL_PER_CELL;
 		int mHeight = HEIGHT * PIXEL_PER_CELL;
-
+		map.getHeight();
 		// Loop through and draw all the blocks
-		for (int row = 0; row < mHeight; row++) {			
-			for (int col = 0; col < mHeight; col++) {
-				g.setColor(new Color((int)(Math.random() * 0x1000000)));
+		for (int row = 0; row < HEIGHT; row++) {			
+			for (int col = 0; col < WIDTH; col++) {
+				Critter curCritter = map.getGrid(row, col);
+				if (curCritter != null) {
+					g.setColor(curCritter.getColor());
+				} else {
+					g.setColor(Color.BLACK);
+				}
 				g.fillRect(1 + col*PIXEL_PER_CELL, 1 + row*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
 			}
 		} 
@@ -204,9 +210,10 @@ public class Terrarium extends JComponent {
 	public void startGame() {
 		// cheap way to reset the board state
 		map = new TMap(WIDTH, HEIGHT);
+		map.getHeight();
 		
 		// draw the new board state once
-		repaint();
+		//repaint();
 		gameOn = true;
 		
 		// Set mode based on checkbox at start of game
@@ -292,6 +299,7 @@ public class Terrarium extends JComponent {
 		} catch (Exception ignored) { }
 		
 		Terrarium terrarium = new Terrarium(PIXEL_PER_CELL);
+
 		JFrame frame = Terrarium.createFrame(terrarium);
 		frame.setVisible(true);
 	}
