@@ -1,5 +1,5 @@
 // TMap.java
-
+import java.util.*;
 /*
  * NaCoWriMo: Project 1
  * Start: Nov 5, 2015
@@ -19,6 +19,7 @@ public class TMap {
 	private Critter[][] map;
 
 	private boolean DEBUG = true;
+	private Random random;
 
 
 	/*
@@ -29,6 +30,9 @@ public class TMap {
 		this.width = width;
 		this.height = height;
 		map = new Critter[width][height];
+
+		if (DEBUG) random = new Random(0);	// same seq every time
+		else random = new Random(); // diff seq each game
 
 		for(int row = 0; row < height; row++) {
 			for(int col = 0; col < width; col++) {
@@ -84,16 +88,12 @@ public class TMap {
 		}
 	}
 
-	private void fightNeighbor(int x, int y, int xE, int yE) {
-		if (outOfBounds(x,y) || outOfBounds(xE,yE)) return;
-
-		Critter crit = getGrid(x, y);
-		Critter enemy = getGrid(xE, yE);
-		if (enemy == null) return;
+	private void fightCritters(Critter crit, Critter enemy) {
 		int critStr = crit.getStrength();
 		int critHlth = crit.getHealth();
 		int enemyStr = enemy.getStrength();
 		int enemyHlth = enemy.getHealth();
+
 		if (critStr < enemyStr) {
 			crit.setHealth(critHlth-enemyStr);
 		} else if (critStr > enemyStr) {
@@ -104,18 +104,56 @@ public class TMap {
 		}
 	}
 
+	private int fertilityMin = 8;
+
+	private void generateLife(int x, int y) {
+		int[] breedingPower = new int[Critter.nSpecies];
+		for (int row = y - 1; row < y + 2; row++) {
+			for (int col = x - 1; col < x + 2; col++) {
+				if (!outOfBounds(x,y)) { 
+					Critter crit = getGrid(row, col);
+					if (crit != null) {
+						breedingPower[crit.getSpecies()] += crit.getFertility();
+					}
+				}
+			}
+		}
+/**		if (breedingPower > fertilityMin) {
+			Critter baby = new Critter(randInt(0,Critter.nSpecies - 1));
+			baby.setHealth(randInt(1,20));
+			baby.setStrength(randInt(0,4));
+			baby.setFertility(randInt(0,5));
+			setGrid(x, y, baby);
+		} */
+	}
+
+	private int randInt(int min, int max) {
+	    int randomNum = random.nextInt((max - min) + 1) + min;
+	    return randomNum;
+	}
+
+	private void interactCritterWith(Critter crit, int xN, int yN) {
+		if (outOfBounds(xN,yN)) return;
+		Critter neighbor = getGrid(xN, yN);
+		if (neighbor == null) return;
+
+		fightCritters(crit, neighbor);
+	}
+
 	public void update() {
 		for (int row = 0; row < getHeight(); row++) {
 			for (int col = 0; col < getWidth(); col++) {
 				Critter crit = getGrid(row, col);
 				if (crit != null) {
-					fightNeighbor(row, col, row + 1, col - 1);
-					fightNeighbor(row, col, row + 1, col);
-					fightNeighbor(row, col, row + 1, col + 1);
-					fightNeighbor(row, col, row, col + 1);
-					if (crit.getHealth() < 0) {
+					interactCritterWith(crit, row + 1, col - 1);
+					interactCritterWith(crit, row + 1, col);
+					interactCritterWith(crit, row + 1, col + 1);
+					interactCritterWith(crit, row, col + 1);
+					if (crit.getHealth() < 1) {
 						setGrid(row, col, null); 
 					}
+				} else {
+					generateLife(row, col);
 				}
 			}
 		}

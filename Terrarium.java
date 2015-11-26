@@ -25,7 +25,7 @@ public class Terrarium extends JComponent {
 	public static final int HEIGHT = 50;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 10;
+	public static final int PIXEL_PER_CELL = 20;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -86,13 +86,19 @@ public class Terrarium extends JComponent {
 		for (int row = 0; row < map.getHeight(); row++) {
 			for (int col = 0; col < map.getWidth(); col++) {
 				if(random.nextFloat() < p) {
-					Critter crit = new Critter();
-					crit.setHealth((int)(random.nextFloat()*10));
-					crit.setStrength((int)(random.nextFloat()*2));
+					Critter crit = new Critter(randInt(0,2));
+					crit.setHealth(randInt(1,20));
+					crit.setStrength(randInt(0,4));
+					crit.setFertility(randInt(0,5));
 					map.setGrid(row, col, crit);
 				}
 			}
 		}
+	}
+
+	private int randInt(int min, int max) {
+	    int randomNum = random.nextInt((max - min) + 1) + min;
+	    return randomNum;
 	}
 
 	/*

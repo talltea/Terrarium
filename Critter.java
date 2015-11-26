@@ -19,18 +19,31 @@ import java.awt.*;
 public class Critter {
     private int health;
     private int strength;
-    private Color color;
+    private int fertility;
 
-    public Critter() {
+    private Color color;
+    private int species;    // larger numbers = higher on food chain
+
+    public static int nSpecies = 3;
+
+    public Critter(int species) {
 		health = 0;
         strength = 0;
-        color = Color.RED;   
+        fertility = 0;
+        this.species = species;
+        if (species == 0) {
+            color = Color.RED;   
+        } else if (species == 1) {
+            color = Color.GREEN;
+        } else {
+            color = Color.BLUE;
+        }
     }
 
     public void setHealth(int health) {
         this.health = health;
         if (health > 0) {
-            color = new Color((health*10)%255,10,10);
+            color = new Color((health*10)%255,(species*70)%255,(species*70)%255);
         } else {
             color = Color.BLACK;
         }
@@ -46,7 +59,19 @@ public class Critter {
 
     public int getStrength() {
         return strength;
+    }
+
+    public int getSpecies() {
+        return species;
     }   
+
+    public void setFertility(int fertility) {
+        this.fertility = fertility;
+    }
+
+    public int getFertility() {
+        return fertility;
+    } 
 
     public void setColor(Color color) {
     	this.color = color;
