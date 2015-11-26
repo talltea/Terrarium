@@ -21,11 +21,11 @@ import javax.swing.event.*;
 
 public class Terrarium extends JComponent {
 	// size of the board in cells
-	public static final int WIDTH = 20;
-	public static final int HEIGHT = 20;
+	public static final int WIDTH = 50;
+	public static final int HEIGHT = 50;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 20;
+	public static final int PIXEL_PER_CELL = 10;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -76,6 +76,23 @@ public class Terrarium extends JComponent {
 			}
 		};
 		timer = new javax.swing.Timer(DELAY, tickTock);
+	}
+
+	/*
+	 * Populates world randomly! 
+	 */
+	public void populateWorldRandomly() {
+		double p = .3;
+		for (int row = 0; row < map.getHeight(); row++) {
+			for (int col = 0; col < map.getWidth(); col++) {
+				if(random.nextFloat() < p) {
+					Critter crit = new Critter();
+					crit.setHealth((int)(random.nextFloat()*10));
+					crit.setStrength((int)(random.nextFloat()*2));
+					map.setGrid(row, col, crit);
+				}
+			}
+		}
 	}
 
 	/*
@@ -210,6 +227,7 @@ public class Terrarium extends JComponent {
 	public void startGame() {
 		// cheap way to reset the board state
 		map = new TMap(WIDTH, HEIGHT);
+		
 		map.getHeight();
 		
 		// draw the new board state once
@@ -221,6 +239,8 @@ public class Terrarium extends JComponent {
 		
 		if (testMode) random = new Random(0);	// same seq every time
 		else random = new Random(); // diff seq each game
+		
+		populateWorldRandomly();
 		
 		enableButtons();
 		timeLabel.setText(" ");

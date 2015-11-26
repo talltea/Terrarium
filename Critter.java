@@ -18,18 +18,35 @@ import java.awt.*;
 
 public class Critter {
     private int health;
+    private int strength;
     private Color color;
-    private static int counter = 0;
 
     public Critter() {
 		health = 0;
-        counter++;
-        if (counter%7 == 0) {
-    		color = Color.GREEN;
-        } else { 
-            color = Color.RED;
+        strength = 0;
+        color = Color.RED;   
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+        if (health > 0) {
+            color = new Color((health*10)%255,10,10);
+        } else {
+            color = Color.BLACK;
         }
     }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public int getStrength() {
+        return strength;
+    }   
 
     public void setColor(Color color) {
     	this.color = color;
