@@ -32,9 +32,9 @@ public class Critter {
         fertility = 0;
         this.species = species;
         if (species == 0) {
-            color = Color.RED;   
+            color = Color.GREEN;   
         } else if (species == 1) {
-            color = Color.GREEN;
+            color = Color.RED;
         } else {
             color = Color.BLUE;
         }
@@ -43,7 +43,13 @@ public class Critter {
     public void setHealth(int health) {
         this.health = health;
         if (health > 0) {
-            color = new Color((health*10)%255,(species*70)%255,(species*70)%255);
+            if (species == 0) {
+                color = new Color((health*10)%255, 10, 10); 
+            } else if (species == 1) {
+                color = new Color(10, (health*10)%255, 10);
+            } else {
+                color = new Color(10, 10, (health*10)%255);
+            }
         } else {
             color = Color.BLACK;
         }

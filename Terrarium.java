@@ -21,11 +21,11 @@ import javax.swing.event.*;
 
 public class Terrarium extends JComponent {
 	// size of the board in cells
-	public static final int WIDTH = 50;
-	public static final int HEIGHT = 50;
+	public static final int WIDTH = 500;
+	public static final int HEIGHT = 500;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 20;
+	public static final int PIXEL_PER_CELL = 2;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -86,7 +86,7 @@ public class Terrarium extends JComponent {
 		for (int row = 0; row < map.getHeight(); row++) {
 			for (int col = 0; col < map.getWidth(); col++) {
 				if(random.nextFloat() < p) {
-					Critter crit = new Critter(randInt(0,2));
+					Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
 					crit.setHealth(randInt(1,20));
 					crit.setStrength(randInt(0,4));
 					crit.setFertility(randInt(0,5));

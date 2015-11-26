@@ -104,7 +104,7 @@ public class TMap {
 		}
 	}
 
-	private int fertilityMin = 8;
+	private int fertilityMin = 4;
 
 	private void generateLife(int x, int y) {
 		int[] breedingPower = new int[Critter.nSpecies];
@@ -118,13 +118,35 @@ public class TMap {
 				}
 			}
 		}
-/**		if (breedingPower > fertilityMin) {
-			Critter baby = new Critter(randInt(0,Critter.nSpecies - 1));
+		if (maxIntVal(breedingPower) > fertilityMin) {
+			Critter baby = new Critter(maxIntIndex(breedingPower));
 			baby.setHealth(randInt(1,20));
 			baby.setStrength(randInt(0,4));
 			baby.setFertility(randInt(0,5));
 			setGrid(x, y, baby);
-		} */
+		} 
+	}
+
+	private int maxIntVal(int[] array) {
+		int maxVal = 0;
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] > maxVal) {
+				maxVal = array[i];
+			}
+		}
+		return maxVal;
+	}
+
+	private int maxIntIndex(int[] array) {
+		int maxVal = 0;
+		int maxIndex = 0;
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] > maxVal) {
+				maxVal = array[i];
+				maxIndex = i;
+			}
+		}
+		return maxIndex;
 	}
 
 	private int randInt(int min, int max) {
