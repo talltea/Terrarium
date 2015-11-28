@@ -21,11 +21,11 @@ import javax.swing.event.*;
 
 public class Terrarium extends JComponent {
 	// size of the board in cells
-	public static final int WIDTH = 25;
-	public static final int HEIGHT = 15;
+	public static final int WIDTH = 50;
+	public static final int HEIGHT = 40;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 25;
+	public static final int PIXEL_PER_CELL = 15;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -43,7 +43,8 @@ public class Terrarium extends JComponent {
 	// Controls
 	protected JLabel timeLabel;
 	protected JButton startButton;
-	protected JButton stopButton;
+	protected JButton pauseButton;
+	protected JButton newGameButton;
 	protected javax.swing.Timer timer;
 	protected JSlider speed;
 	protected JCheckBox testButton;
@@ -57,15 +58,15 @@ public class Terrarium extends JComponent {
 	 * is drawn with the given number of pixels.
 	 * Creates the timer object, but doesn't start it
 	 */
-	Terrarium(int pixels) {
+	Terrarium() {
 		super();
 		gameOn = false;
 		map = new TMap(WIDTH, HEIGHT);
 
 		// Set component size to allow given pixels for each block plus
 		// a 1 pixel border around the whole thing.
-		int pxlWidth = (WIDTH * pixels) + 2;
-		int pxlHeight = (HEIGHT * pixels) + 2;
+		int pxlWidth = (WIDTH * PIXEL_PER_CELL) + 2;
+		int pxlHeight = (HEIGHT * PIXEL_PER_CELL) + 2;
 		setPreferredSize(new Dimension(pxlWidth, pxlHeight));
 		requestFocusInWindow();
 
@@ -118,7 +119,6 @@ public class Terrarium extends JComponent {
 		timeLabel.setText(Double.toString(delta/1000.0) + " seconds");
 	}
 
-
 	/*
 	 * Draws the current state of the map to the frame
 	 */
@@ -162,15 +162,27 @@ public class Terrarium extends JComponent {
 		});
 	}
 
-	private void drawStopButton(JPanel panel) {
-		stopButton = new JButton("Stop");
-		panel.add(stopButton);
-		stopButton.addActionListener( new ActionListener() {
+	private void drawPauseButton(JPanel panel) {
+		pauseButton = new JButton("Pause");
+		panel.add(pauseButton);
+		pauseButton.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Stop the game!");
-				stopGame();
+				System.out.println("Pause the game!");
+				pauseGame();
 			}
 		});
+	}
+
+	private void drawNewGameButton(JPanel panel) {
+		newGameButton = new JButton("New Game");
+		panel.add(newGameButton);
+		newGameButton.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Generate new game!");
+				newGame();
+			}
+		});
+		newGameButton.setEnabled(true); 
 	}
 
 	private void drawSlider(JPanel panel) { 
@@ -206,8 +218,10 @@ public class Terrarium extends JComponent {
 		drawTimeLabel(panel);
 
 		drawStartButton(panel);
-		drawStopButton(panel);
+		drawPauseButton(panel);
+		drawNewGameButton(panel);
 		enableButtons();
+		startButton.setEnabled(false);
 		
 		drawSlider(panel);
 		
@@ -231,39 +245,42 @@ public class Terrarium extends JComponent {
 	 so the game is happening.
 	*/
 	public void startGame() {
+		gameOn = true;
+		enableButtons();
+
+		// play game
+		timer.start();
+	}
+
+	/*
+	 * Creates a new game.
+	*/
+	public void newGame() {
+		gameOn = false;
+		enableButtons();
+		timer.stop();
+
 		// cheap way to reset the board state
 		map = new TMap(WIDTH, HEIGHT);
-		
-		map.getHeight();
-		
-		// draw the new board state once
-		//repaint();
-		gameOn = true;
-		
 		// Set mode based on checkbox at start of game
 		testMode = testButton.isSelected();
-		
+			
 		if (testMode) random = new Random(0);	// same seq every time
 		else random = new Random(); // diff seq each game
 		
 		populateWorldRandomly();
 		repaint();
-		
-		enableButtons();
 		timeLabel.setText(" ");
-
-		// play game
-		timer.start();
 		startTime = System.currentTimeMillis();
 	}
 
 	/*
-	 * Stops the game.
+	 * Pauses the game.
 	*/
-	public void stopGame() {
+	public void pauseGame() {
 		gameOn = false;
 		enableButtons();
-		timer.stop();
+		timer.stop(); /* TODO: FIX */
 	}
 
 	/*
@@ -272,7 +289,7 @@ public class Terrarium extends JComponent {
 	*/
 	private void enableButtons() {
 		startButton.setEnabled(!gameOn);
-		stopButton.setEnabled(gameOn);
+		pauseButton.setEnabled(gameOn);
 	}
 
 	/*
@@ -314,7 +331,6 @@ public class Terrarium extends JComponent {
 		return frame;
 	}
 
-
 	/*
 	 Creates a frame with a Terrarium.
 	*/
@@ -325,8 +341,7 @@ public class Terrarium extends JComponent {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception ignored) { }
 		
-		Terrarium terrarium = new Terrarium(PIXEL_PER_CELL);
-
+		Terrarium terrarium = new Terrarium();
 		JFrame frame = Terrarium.createFrame(terrarium);
 		frame.setVisible(true);
 	}
