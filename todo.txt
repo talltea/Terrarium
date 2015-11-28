@@ -1,0 +1,13 @@
+TODO:
+
+in no particular order:
+* add randomness to fights
+* come up with a better fight algorithm in general
+* stop biasing towards one species when breeding 
+* generalize how many species I can have
+* come up with a better way to display more tahn 3 species
+* have critters be able to move
+* inheritable traits when breading 
+* species determined traits
+* hunger algorith 
+* pause button
