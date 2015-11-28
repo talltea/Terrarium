@@ -21,11 +21,11 @@ import javax.swing.event.*;
 
 public class Terrarium extends JComponent {
 	// size of the board in cells
-	public static final int WIDTH = 500;
-	public static final int HEIGHT = 500;
+	public static final int WIDTH = 25;
+	public static final int HEIGHT = 15;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 2;
+	public static final int PIXEL_PER_CELL = 25;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -83,14 +83,14 @@ public class Terrarium extends JComponent {
 	 */
 	public void populateWorldRandomly() {
 		double p = .3;
-		for (int row = 0; row < map.getHeight(); row++) {
-			for (int col = 0; col < map.getWidth(); col++) {
+		for (int x = 0; x < map.getWidth(); x++) {
+			for (int y = 0; y < map.getHeight(); y++) {
 				if(random.nextFloat() < p) {
 					Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
 					crit.setHealth(randInt(1,20));
 					crit.setStrength(randInt(0,4));
 					crit.setFertility(randInt(0,5));
-					map.setGrid(row, col, crit);
+					map.setGrid(x, y, crit);
 				}
 			}
 		}
@@ -131,15 +131,15 @@ public class Terrarium extends JComponent {
 		int mHeight = HEIGHT * PIXEL_PER_CELL;
 		map.getHeight();
 		// Loop through and draw all the blocks
-		for (int row = 0; row < HEIGHT; row++) {			
-			for (int col = 0; col < WIDTH; col++) {
-				Critter curCritter = map.getGrid(row, col);
+		for (int x = 0; x < WIDTH; x++) {			
+			for (int y = 0; y < HEIGHT; y++) {
+				Critter curCritter = map.getGrid(x, y);
 				if (curCritter != null) {
 					g.setColor(curCritter.getColor());
 				} else {
 					g.setColor(Color.BLACK);
 				}
-				g.fillRect(1 + col*PIXEL_PER_CELL, 1 + row*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
+				g.fillRect(1 + x*PIXEL_PER_CELL, 1 + y*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
 			}
 		} 
 	}
@@ -247,6 +247,7 @@ public class Terrarium extends JComponent {
 		else random = new Random(); // diff seq each game
 		
 		populateWorldRandomly();
+		repaint();
 		
 		enableButtons();
 		timeLabel.setText(" ");

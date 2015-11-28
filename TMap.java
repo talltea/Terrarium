@@ -29,7 +29,7 @@ public class TMap {
 	public TMap(int width, int height) {
 		this.width = width;
 		this.height = height;
-		map = new Critter[width][height];
+		map = new Critter[height][width];
 
 		if (DEBUG) random = new Random(0);	// same seq every time
 		else random = new Random(); // diff seq each game
@@ -74,7 +74,7 @@ public class TMap {
 		if(outOfBounds(x,y)) {
 			return null;
 		}
-		return map[x][y];
+		return map[y][x];
 	}
 
 	/*
@@ -84,7 +84,7 @@ public class TMap {
 	 */
 	public void setGrid(int x, int y, Critter crit) {
 		if (!outOfBounds(x,y)) { 
-			map[x][y] = crit;
+			map[y][x] = crit;
 		}
 	}
 
@@ -104,14 +104,14 @@ public class TMap {
 		}
 	}
 
-	private int fertilityMin = 4;
+	private int fertilityMin = 8;
 
-	private void generateLife(int x, int y) {
+	private void generateLife(int xB, int yB) {
 		int[] breedingPower = new int[Critter.nSpecies];
-		for (int row = y - 1; row < y + 2; row++) {
-			for (int col = x - 1; col < x + 2; col++) {
+		for (int x = xB - 1; x < xB + 2; x++) {
+			for (int y = yB - 1; y < yB + 2; y++) {
 				if (!outOfBounds(x,y)) { 
-					Critter crit = getGrid(row, col);
+					Critter crit = getGrid(x, y);
 					if (crit != null) {
 						breedingPower[crit.getSpecies()] += crit.getFertility();
 					}
@@ -123,7 +123,7 @@ public class TMap {
 			baby.setHealth(randInt(1,20));
 			baby.setStrength(randInt(0,4));
 			baby.setFertility(randInt(0,5));
-			setGrid(x, y, baby);
+			setGrid(xB, yB, baby);
 		} 
 	}
 
@@ -159,23 +159,32 @@ public class TMap {
 		Critter neighbor = getGrid(xN, yN);
 		if (neighbor == null) return;
 
-		fightCritters(crit, neighbor);
+		if (crit.getSpecies() != neighbor.getSpecies()) {
+			fightCritters(crit, neighbor);
+		}
+	}
+
+	private void hungerHealth(Critter crit) {
+		int health = crit.getHealth();
+		crit.setHealth(health-1);
 	}
 
 	public void update() {
-		for (int row = 0; row < getHeight(); row++) {
-			for (int col = 0; col < getWidth(); col++) {
-				Critter crit = getGrid(row, col);
+		for (int x = 0; x < getWidth(); x++) {
+			for (int y = 0; y < getHeight(); y++) {
+				Critter crit = getGrid(x, y);
 				if (crit != null) {
-					interactCritterWith(crit, row + 1, col - 1);
-					interactCritterWith(crit, row + 1, col);
-					interactCritterWith(crit, row + 1, col + 1);
-					interactCritterWith(crit, row, col + 1);
+					interactCritterWith(crit, x + 1, y - 1);
+					interactCritterWith(crit, x + 1, y);
+					interactCritterWith(crit, x + 1, y + 1);
+					interactCritterWith(crit, x, y + 1);
 					if (crit.getHealth() < 1) {
-						setGrid(row, col, null); 
+						setGrid(x, y, null); 
+					} else {
+						hungerHealth(crit);
 					}
 				} else {
-					generateLife(row, col);
+					generateLife(x, y);
 				}
 			}
 		}
