@@ -17,8 +17,9 @@ public class TMap {
 	private int width;
 	private int height;
 	private Critter[][] map;
+	private Critter[][] mapUpdated;
 
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 	private Random random;
 
 
@@ -30,6 +31,7 @@ public class TMap {
 		this.width = width;
 		this.height = height;
 		map = new Critter[height][width];
+		mapUpdated = new Critter[height][width];
 
 		if (DEBUG) random = new Random(0);	// same seq every time
 		else random = new Random(); // diff seq each game
@@ -37,6 +39,7 @@ public class TMap {
 		for(int row = 0; row < height; row++) {
 			for(int col = 0; col < width; col++) {
 				map[row][col] = null;
+				mapUpdated[row][col] = null;
 			}
 		}
 	}
@@ -85,6 +88,17 @@ public class TMap {
 	public void setGrid(int x, int y, Critter crit) {
 		if (!outOfBounds(x,y)) { 
 			map[y][x] = crit;
+		}
+	}
+
+	/*
+	 * Sets the location in the grid to contain the
+	 * given critter. if location is out of bounds,
+	 * does nothing.
+	 */
+	public void setGridUpdated(int x, int y, Critter crit) {
+		if (!outOfBounds(x,y)) { 
+			mapUpdated[y][x] = crit;
 		}
 	}
 
@@ -169,11 +183,25 @@ public class TMap {
 		crit.setHealth(health-1);
 	}
 
+	private void moveCritter(int x, int y) {
+		int dX = randInt(-1, 1);
+		int dY = randInt(-1, 1);
+		if(outOfBounds(x+dX, y+dY)) return;
+
+		if(getGrid(x+dX, y+dY) == null) {
+			setGridUpdated(x+dX, y+dY, getGrid(x,y));
+			setGridUpdated(x,y,null);
+			if(DEBUG) System.out.println("Move: x = " +x+" + "+dX + " y = " + y+" + "+dY);
+		}
+	}
+
 	public void update() {
+		if(DEBUG) System.out.println("UPDATE");
 		for (int x = 0; x < getWidth(); x++) {
 			for (int y = 0; y < getHeight(); y++) {
 				Critter crit = getGrid(x, y);
 				if (crit != null) {
+					if(DEBUG) System.out.println("FOUND CRIT x = " + x + " y = " + y);
 					interactCritterWith(crit, x + 1, y - 1);
 					interactCritterWith(crit, x + 1, y);
 					interactCritterWith(crit, x + 1, y + 1);
@@ -182,6 +210,7 @@ public class TMap {
 						setGrid(x, y, null); 
 					} else {
 						hungerHealth(crit);
+						moveCritter(x,y);
 					}
 				} else {
 					generateLife(x, y);
@@ -189,6 +218,9 @@ public class TMap {
 			}
 		}
 
+		for(int i = 0; i < height; i++) {
+    		map[i] = mapUpdated[i].clone();
+    	}
 	}
 
 }

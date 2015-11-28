@@ -21,11 +21,11 @@ import javax.swing.event.*;
 
 public class Terrarium extends JComponent {
 	// size of the board in cells
-	public static final int WIDTH = 50;
-	public static final int HEIGHT = 40;
+	public static final int WIDTH = 20;
+	public static final int HEIGHT = 20;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 15;
+	public static final int PIXEL_PER_CELL = 30;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -83,7 +83,7 @@ public class Terrarium extends JComponent {
 	 * Populates world randomly! 
 	 */
 	public void populateWorldRandomly() {
-		double p = .3;
+		double p = .5;
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y < map.getHeight(); y++) {
 				if(random.nextFloat() < p) {
@@ -95,6 +95,19 @@ public class Terrarium extends JComponent {
 				}
 			}
 		}
+	}
+
+	/*
+	 * Populates world with a single critter! 
+	 */
+	public void populateLonelyWorld() {
+		Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
+		crit.setHealth(20);
+		crit.setStrength(randInt(0,4));
+		crit.setFertility(randInt(0,5));
+		int x = randInt(0, WIDTH);
+		int y = randInt(0, HEIGHT);
+		map.setGrid(x, y, crit);
 	}
 
 	private int randInt(int min, int max) {
@@ -269,6 +282,7 @@ public class Terrarium extends JComponent {
 		else random = new Random(); // diff seq each game
 		
 		populateWorldRandomly();
+		//populateLonelyWorld();
 		repaint();
 		timeLabel.setText(" ");
 		startTime = System.currentTimeMillis();
