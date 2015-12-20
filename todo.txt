@@ -2,8 +2,6 @@ TODO:
 
 in no particular order:
 
-* What's going on in the first timestep with all the critters? 
-
 * add randomness to fights
 * come up with a better fight algorithm in general
 
@@ -12,7 +10,7 @@ in no particular order:
 * species determined traits
 
 * generalize how many species I can have
-* come up with a better way to display more than 3 species
+* implement a better way to display more than 3 species
 	(health display with opacity?)
 
 * hunger algorithm
@@ -21,11 +19,10 @@ in no particular order:
 * timer correct with pause
 
 * real time edits of species specs
-* slecting specific critters and displaying their stats
 * fancy background
 
 * code in constants for critters 
 * constants for world (so that I don't have to recompile each time for screen size)
 
 
-DONE: 3
+DONE: 6

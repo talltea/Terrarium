@@ -3,8 +3,10 @@
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 import javax.swing.event.*;
+import java.io.*;
 
 /*
  * NaCoWriMo: Project 1
@@ -19,7 +21,7 @@ import javax.swing.event.*;
  * about the enhabitants in the game.
  */
 
-public class Terrarium extends JComponent {
+public class Terrarium extends JComponent implements MouseListener{
 	// size of the board in cells
 	public static final int WIDTH = 20;
 	public static final int HEIGHT = 20;
@@ -62,6 +64,7 @@ public class Terrarium extends JComponent {
 		super();
 		gameOn = false;
 		map = new TMap(WIDTH, HEIGHT);
+		addMouseListener(this);
 
 		// Set component size to allow given pixels for each block plus
 		// a 1 pixel border around the whole thing.
@@ -83,14 +86,14 @@ public class Terrarium extends JComponent {
 	 * Populates world randomly! 
 	 */
 	public void populateWorldRandomly() {
-		double p = .5;
+		double p = .9;
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y < map.getHeight(); y++) {
 				if(random.nextFloat() < p) {
 					Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
-					crit.setHealth(randInt(1,20));
-					crit.setStrength(randInt(0,4));
-					crit.setFertility(randInt(0,5));
+					crit.setHealth(randInt(10,20));
+					crit.setStrength(randInt(0,2));
+					crit.setFertility(randInt(1,6));
 					map.setGrid(x, y, crit);
 				}
 			}
@@ -149,10 +152,8 @@ public class Terrarium extends JComponent {
 				Critter curCritter = map.getGrid(x, y);
 				if (curCritter != null) {
 					g.setColor(curCritter.getColor());
-				} else {
-					g.setColor(Color.BLACK);
-				}
-				g.fillRect(1 + x*PIXEL_PER_CELL, 1 + y*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
+					g.fillOval(1 + x*PIXEL_PER_CELL, 1 + y*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
+				} 
 			}
 		} 
 	}
@@ -328,8 +329,9 @@ public class Terrarium extends JComponent {
 		JFrame frame = new JFrame("Terrarium");
 		JComponent container = (JComponent)frame.getContentPane();
 		container.setLayout(new BorderLayout());
+		container.setBackground(Color.black);
 
-		// Install the passed in JTetris in the center.
+		// Install the passed in Terrarium in the center.
 		container.add(terrarium, BorderLayout.CENTER);
 		
 		// Create and install the panel of controls.
@@ -344,6 +346,54 @@ public class Terrarium extends JComponent {
 		
 		return frame;
 	}
+
+	private int Y_OFFSET = 45; 
+	public void mouseClicked(MouseEvent e) {
+		Point loc = e.getLocationOnScreen();
+		int x = (int)loc.getX();
+		int y = (int)loc.getY() - Y_OFFSET;
+		int critX = x/PIXEL_PER_CELL;
+		int critY = y/PIXEL_PER_CELL;
+		Critter crit = map.getGrid(critX, critY);
+		if (crit != null) {
+			System.out.println(crit.getColor());
+		} else {
+			System.out.println("No critter");
+		}
+    	//System.out.println("Mouse pressed! " + x + " " + y + " = " + critX + " " + critY);
+
+    }
+    private Critter critHold;
+    private int holdX;
+    private int holdY;
+    public void mousePressed(MouseEvent e){
+    	if (gameOn) return;
+
+    	//if game is paused, we can drag critters
+    	Point loc = e.getLocationOnScreen();
+		int x = (int)loc.getX();
+		int y = (int)loc.getY() - Y_OFFSET;
+		int critX = x/PIXEL_PER_CELL;
+		int critY = y/PIXEL_PER_CELL;
+		critHold = map.getGrid(critX, critY);
+		holdX = critX;
+		holdY = critY;
+    }
+    public void mouseEntered(MouseEvent e){}
+    public void mouseExited(MouseEvent e){}
+    public void mouseReleased(MouseEvent e){
+    	if (critHold == null) return;
+    	Point loc = e.getLocationOnScreen();
+		int x = (int)loc.getX();
+		int y = (int)loc.getY() - Y_OFFSET;
+		int critX = x/PIXEL_PER_CELL;
+		int critY = y/PIXEL_PER_CELL;
+		if (map.getGrid(critX, critY) == null) {
+			map.setGrid(critX, critY, critHold);
+			map.setGrid(holdX, holdY, null);
+		}
+		repaint();
+    }
 
 	/*
 	 Creates a frame with a Terrarium.

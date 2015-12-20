@@ -118,7 +118,7 @@ public class TMap {
 		}
 	}
 
-	private int fertilityMin = 8;
+	private int fertilityMin = 3;
 
 	private void generateLife(int xB, int yB) {
 		int[] breedingPower = new int[Critter.nSpecies];
@@ -192,6 +192,8 @@ public class TMap {
 			setGridUpdated(x+dX, y+dY, getGrid(x,y));
 			setGridUpdated(x,y,null);
 			if(DEBUG) System.out.println("Move: x = " +x+" + "+dX + " y = " + y+" + "+dY);
+		} else {
+			setGridUpdated(x, y, getGrid(x,y));
 		}
 	}
 
@@ -208,12 +210,21 @@ public class TMap {
 					interactCritterWith(crit, x, y + 1);
 					if (crit.getHealth() < 1) {
 						setGrid(x, y, null); 
+						if (DEBUG) System.out.println("Critter Died " + y + " " + x);
 					} else {
 						hungerHealth(crit);
 						moveCritter(x,y);
 					}
 				} else {
 					generateLife(x, y);
+				}
+			}
+		}
+		for (int x = 0; x < getWidth(); x++) {
+			for (int y = 0; y < getHeight(); y++) {
+				Critter crit = getGrid(x, y);
+				if (crit != null) {
+					moveCritter(x,y);
 				}
 			}
 		}
