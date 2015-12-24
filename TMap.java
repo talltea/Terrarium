@@ -89,6 +89,7 @@ public class TMap {
 		if (!outOfBounds(x,y)) { 
 			map[y][x] = crit;
 		}
+		setGridUpdated(x, y, crit);
 	}
 
 	/*
@@ -102,31 +103,15 @@ public class TMap {
 		}
 	}
 
-	private void fightCritters(Critter crit, Critter enemy) {
-		int critStr = crit.getStrength();
-		int critHlth = crit.getHealth();
-		int enemyStr = enemy.getStrength();
-		int enemyHlth = enemy.getHealth();
-
-		if (critStr < enemyStr) {
-			crit.setHealth(critHlth-enemyStr);
-		} else if (critStr > enemyStr) {
-			enemy.setHealth(enemyHlth-critStr);
-		} else {
-			crit.setHealth(critHlth-enemyStr);
-			enemy.setHealth(enemyHlth-critStr);
-		}
-	}
-
-	private int fertilityMin = 3;
-
+	private int fertilityMin = 5;
+	private int minBreedingHealth = 5;
 	private void generateLife(int xB, int yB) {
 		int[] breedingPower = new int[Critter.nSpecies];
 		for (int x = xB - 1; x < xB + 2; x++) {
 			for (int y = yB - 1; y < yB + 2; y++) {
 				if (!outOfBounds(x,y)) { 
 					Critter crit = getGrid(x, y);
-					if (crit != null) {
+					if (crit != null && crit.getHealth() > minBreedingHealth) {
 						breedingPower[crit.getSpecies()] += crit.getFertility();
 					}
 				}
@@ -138,6 +123,7 @@ public class TMap {
 			baby.setStrength(randInt(0,4));
 			baby.setFertility(randInt(0,5));
 			setGrid(xB, yB, baby);
+			// System.out.println("baby! " + xB + " " + yB);
 		} 
 	}
 
@@ -174,13 +160,14 @@ public class TMap {
 		if (neighbor == null) return;
 
 		if (crit.getSpecies() != neighbor.getSpecies()) {
-			fightCritters(crit, neighbor);
+			crit.fightWith(neighbor);
 		}
 	}
 
+	private int hungerLoss = 3;
 	private void hungerHealth(Critter crit) {
 		int health = crit.getHealth();
-		crit.setHealth(health-1);
+		crit.setHealth(health-hungerLoss);
 	}
 
 	private void moveCritter(int x, int y) {
@@ -212,8 +199,7 @@ public class TMap {
 						setGrid(x, y, null); 
 						if (DEBUG) System.out.println("Critter Died " + y + " " + x);
 					} else {
-						hungerHealth(crit);
-						moveCritter(x,y);
+						crit.updateCritter();
 					}
 				} else {
 					generateLife(x, y);

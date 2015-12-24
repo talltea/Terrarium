@@ -85,15 +85,17 @@ public class Terrarium extends JComponent implements MouseListener{
 	/*
 	 * Populates world randomly! 
 	 */
+	private double randPopulation = .2;
+
 	public void populateWorldRandomly() {
-		double p = .9;
+		double p = randPopulation;
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y < map.getHeight(); y++) {
 				if(random.nextFloat() < p) {
 					Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
 					crit.setHealth(randInt(10,20));
 					crit.setStrength(randInt(0,2));
-					crit.setFertility(randInt(1,6));
+					crit.setFertility(randInt(1,3));
 					map.setGrid(x, y, crit);
 				}
 			}

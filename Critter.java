@@ -20,11 +20,14 @@ public class Critter {
     private int health;
     private int strength;
     private int fertility;
+    private int hungerLoss = 3;
 
     private Color color;
     private int species;    // larger numbers = higher on food chain
 
     public static int nSpecies = 3;
+
+
 
     public Critter(int species) {
 		health = 0;
@@ -85,5 +88,39 @@ public class Critter {
 
     public Color getColor() {
     	return color;
+    }
+
+    public void fightWith(Critter enemy) {
+        int enemyStr = enemy.getStrength();
+        int enemyHlth = enemy.getHealth();
+
+        if (strength < enemyStr) {
+            health -= enemyStr;
+        } else if (strength > enemyStr) {
+            enemy.setHealth(enemyHlth-strength);
+        } else {
+            health =- enemyStr;
+            enemy.setHealth(enemyHlth-strength);
+        }
+
+        if (health < 0) {
+            enemy.setHealth(20);
+        } 
+        if (enemy.getHealth() < 0) {
+            health = 20;
+        }
+    }
+
+    private void hungerUpdate() {
+        setHealth(getHealth() - hungerLoss);
+    }
+
+    private void ageUpdate() {
+        
+    }
+
+    public void updateCritter() {
+        hungerUpdate();
+        ageUpdate();
     }
 }

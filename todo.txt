@@ -6,23 +6,36 @@ in no particular order:
 * come up with a better fight algorithm in general
 
 * stop biasing towards one species when breeding 
+
 * inheritable traits when breading 
+
 * species determined traits
+	* movement
+	* health
+	* hunger
 
 * generalize how many species I can have
 * implement a better way to display more than 3 species
 	(health display with opacity?)
 
-* hunger algorithm
-* feeding algorithm
+* better hunger algorithm
+* better feeding algorithm
+* abstract these away into critter
 
 * timer correct with pause
 
 * real time edits of species specs
 * fancy background
 
+* movements more interesting than random walk
+
 * code in constants for critters 
 * constants for world (so that I don't have to recompile each time for screen size)
+
+* data about # of critters in each species 
+* plot data
+
+*optionally wrap around the world
 
 
 DONE: 6
