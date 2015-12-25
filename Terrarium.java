@@ -23,11 +23,11 @@ import java.io.*;
 
 public class Terrarium extends JComponent implements MouseListener{
 	// size of the board in cells
-	public static final int WIDTH = 20;
-	public static final int HEIGHT = 20;
+	public static int WIDTH = 100;
+	public static int HEIGHT = 100;
 
 	// pixels for each side of the square cells
-	public static final int PIXEL_PER_CELL = 30;
+	public static int PIXEL_PER_CELL = 5;
 	// white space under the times
 	public static final int TIME_SPACING = 12;
 
@@ -397,6 +397,32 @@ public class Terrarium extends JComponent implements MouseListener{
 		repaint();
     }
 
+    private static void promptForConstants() {
+    	// create a scanner so we can read the command-line input
+	    Scanner scanner = new Scanner(System.in);
+
+	    System.out.print("Would you like to input your own constants? (y/n) ");
+	    while (true) {
+		    String custom = scanner.next();
+		    if (custom.equals("y")){
+			    System.out.print("Width: ");
+			    WIDTH = scanner.nextInt();
+			    System.out.print("Height: ");
+				HEIGHT = scanner.nextInt();
+				System.out.print("Pixels per cell: ");
+				PIXEL_PER_CELL = scanner.nextInt();
+				System.out.print("Number of Species: ");
+				Critter.nSpecies = scanner.nextInt();
+				break;
+			} else if (custom.equals("n")) {
+				System.out.println("Using preset constants!");
+				break;
+			} else {
+				System.out.print("Please either type 'y' or 'n': ");
+			}
+		}
+    }
+
 	/*
 	 Creates a frame with a Terrarium.
 	*/
@@ -406,6 +432,8 @@ public class Terrarium extends JComponent implements MouseListener{
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception ignored) { }
+
+		promptForConstants();
 		
 		Terrarium terrarium = new Terrarium();
 		JFrame frame = Terrarium.createFrame(terrarium);
