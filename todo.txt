@@ -9,10 +9,8 @@ in no particular order:
 
 * inheritable traits when breeding 
 
-** species determined traits
+* species determined traits
 	* movement
-	* health
-	* hunger
 
 * better hunger algorithm
 * better feeding algorithm
@@ -34,7 +32,5 @@ in no particular order:
 
 * species that don't move around (grass and water)
 
-*move art code to TMap
 
-
-DONE: 10
+DONE: 13

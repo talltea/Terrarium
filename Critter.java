@@ -21,26 +21,46 @@ public class Critter {
     private int health;
     private int strength;
     private int fertility;
-    private int hungerLoss = 3;
+    private int hungerLoss;
+    private int movement;
 
     private Color color;
     private int species;    // larger numbers = higher on food chain
 
     public static int nSpecies = 3;
-    public static Color[] speciesColors;
+    private static Color[] speciesColors;
+    private static int[] speciesHungerLoss;
+    private static int[] speciesMovement;
+    private static int[] speciesMaxHealth;
+    private static int[] speciesStrength;
+    private static int[] speciesFertility;
 
     private static Random random;
 
     public static void initializeCritterSpecies() {
         random = new Random();
         speciesColors = new Color[nSpecies];
+        speciesHungerLoss = new int[nSpecies];
+        speciesMovement = new int[nSpecies];
+        speciesMaxHealth = new int[nSpecies];
+        speciesStrength = new int[nSpecies];
+        speciesFertility = new int[nSpecies];
         for (int i = 0; i < speciesColors.length; i++) {
             float r = random.nextFloat();
             float g = random.nextFloat();
             float b = random.nextFloat();
             speciesColors[i] = new Color(r, g, b); 
-        }
-        System.out.println("colors init");
+            speciesHungerLoss[i] = randInt(1, 5);
+            speciesMovement[i] = randInt(0, 5);
+            speciesMaxHealth[i] = randInt(5, 25);
+            speciesStrength[i] = randInt(1, 5);
+            speciesFertility[i] = randInt(1, 5);
+         }
+    }
+
+    private static int randInt(int min, int max) {
+        int randomNum = random.nextInt((max - min) + 1) + min;
+        return randomNum;
     }
 
     public Critter(int species) {
@@ -49,6 +69,32 @@ public class Critter {
         fertility = 0;
         this.species = species;
         color = speciesColors[species];
+    }
+
+    public static Critter randCritter(int species) {
+        Critter randCrit = new Critter(species);
+        randCrit.setHealth(randInt(1, speciesMaxHealth[species]));
+        randCrit.setStrength( randInt(1, speciesStrength[species]) );
+        randCrit.setFertility( randInt(1, speciesFertility[species]) );
+        randCrit.setHungerLoss( randInt(1, speciesHungerLoss[species]) );
+        randCrit.setMovement( randInt(0, speciesMovement[species]));
+        return randCrit;
+    }
+
+    public void setMovement(int movement) {
+        this.movement = movement;
+    }
+
+    public int getMovement() {
+        return movement;
+    }
+
+    public void setHungerLoss(int hungerLoss) {
+        this.hungerLoss = hungerLoss;
+    }
+
+    public int getHungerLoss() {
+        return hungerLoss;
     }
 
     public void setHealth(int health) {
@@ -106,11 +152,19 @@ public class Critter {
         }
 
         if (health < 0) {
-            enemy.setHealth(20);
+            enemy.setMaxHealth();
         } 
         if (enemy.getHealth() < 0) {
-            health = 20;
+            this.setMaxHealth();
         }
+    }
+
+    public boolean moveThisTurn() {
+        return (1/movement) < random.nextFloat();
+    }
+
+    public void setMaxHealth() {
+        this.setHealth(speciesMaxHealth[species]);
     }
 
     private void hungerUpdate() {

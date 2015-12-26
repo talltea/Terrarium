@@ -92,10 +92,7 @@ public class Terrarium extends JComponent implements MouseListener{
 		for (int x = 0; x < map.getWidth(); x++) {
 			for (int y = 0; y < map.getHeight(); y++) {
 				if(random.nextFloat() < p) {
-					Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
-					crit.setHealth(randInt(10,20));
-					crit.setStrength(randInt(0,2));
-					crit.setFertility(randInt(1,3));
+					Critter crit = Critter.randCritter(randInt(0,Critter.nSpecies - 1));
 					map.setGrid(x, y, crit);
 				}
 			}
@@ -106,10 +103,7 @@ public class Terrarium extends JComponent implements MouseListener{
 	 * Populates world with a single critter! 
 	 */
 	public void populateLonelyWorld() {
-		Critter crit = new Critter(randInt(0,Critter.nSpecies - 1));
-		crit.setHealth(20);
-		crit.setStrength(randInt(0,4));
-		crit.setFertility(randInt(0,5));
+		Critter crit = Critter.randCritter(randInt(0,Critter.nSpecies - 1));
 		int x = randInt(0, WIDTH);
 		int y = randInt(0, HEIGHT);
 		map.setGrid(x, y, crit);
@@ -145,19 +139,7 @@ public class Terrarium extends JComponent implements MouseListener{
 		// Draw a rect around the whole thing
 		g.drawRect(0, 0, getWidth()-1, getHeight()-1);
 				
-		int mWidth = WIDTH * PIXEL_PER_CELL;
-		int mHeight = HEIGHT * PIXEL_PER_CELL;
-		map.getHeight();
-		// Loop through and draw all the blocks
-		for (int x = 0; x < WIDTH; x++) {			
-			for (int y = 0; y < HEIGHT; y++) {
-				Critter curCritter = map.getGrid(x, y);
-				if (curCritter != null) {
-					g.setColor(curCritter.getColor());
-					g.fillOval(1 + x*PIXEL_PER_CELL, 1 + y*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
-				} 
-			}
-		} 
+		map.paintMap(g, PIXEL_PER_CELL);
 	}
 
 

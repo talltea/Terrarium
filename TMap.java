@@ -1,5 +1,6 @@
 // TMap.java
 import java.util.*;
+import java.awt.Graphics;
 /*
  * NaCoWriMo: Project 1
  * Start: Nov 5, 2015
@@ -108,6 +109,7 @@ public class TMap {
 
 	private int fertilityMin = 5;
 	private int minBreedingHealth = 5;
+
 	private void generateLife(int xB, int yB) {
 		int[] breedingPower = new int[Critter.nSpecies];
 		for (int x = xB - 1; x < xB + 2; x++) {
@@ -121,10 +123,7 @@ public class TMap {
 			}
 		}
 		if (maxIntVal(breedingPower) > fertilityMin) {
-			Critter baby = new Critter(maxIntIndex(breedingPower));
-			baby.setHealth(randInt(1,20));
-			baby.setStrength(randInt(0,4));
-			baby.setFertility(randInt(0,5));
+			Critter baby = Critter.randCritter(maxIntIndex(breedingPower));
 			setGrid(xB, yB, baby);
 			// System.out.println("baby! " + xB + " " + yB);
 		} 
@@ -169,16 +168,19 @@ public class TMap {
 
 
 	private void moveCritter(int x, int y) {
-		int dX = randInt(-1, 1);
-		int dY = randInt(-1, 1);
-		if(outOfBounds(x+dX, y+dY)) return;
+		Critter crit = getGrid(x,y);
+		if (crit != null && crit.moveThisTurn()){
+			int dX = randInt(-1, 1);
+			int dY = randInt(-1, 1);
+			if(outOfBounds(x+dX, y+dY)) return;
 
-		if(getGrid(x+dX, y+dY) == null) {
-			setGridUpdated(x+dX, y+dY, getGrid(x,y));
-			setGridUpdated(x,y,null);
-			if(DEBUG) System.out.println("Move: x = " +x+" + "+dX + " y = " + y+" + "+dY);
-		} else {
-			setGridUpdated(x, y, getGrid(x,y));
+			if(getGrid(x+dX, y+dY) == null) {
+				setGridUpdated(x+dX, y+dY, getGrid(x,y));
+				setGridUpdated(x,y,null);
+				if(DEBUG) System.out.println("Move: x = " +x+" + "+dX + " y = " + y+" + "+dY);
+			} else {
+				setGridUpdated(x, y, getGrid(x,y));
+			}
 		}
 	}
 
@@ -216,6 +218,22 @@ public class TMap {
 		for(int i = 0; i < height; i++) {
     		map[i] = mapUpdated[i].clone();
     	}
+	}
+
+	public void paintMap(Graphics g, int PIXEL_PER_CELL) {
+		// Loop through and draw all the blocks
+		int mWidth = width * PIXEL_PER_CELL;
+		int mHeight = height * PIXEL_PER_CELL;
+		
+		for (int x = 0; x < width; x++) {			
+			for (int y = 0; y < height; y++) {
+				Critter curCritter = getGrid(x, y);
+				if (curCritter != null) {
+					g.setColor(curCritter.getColor());
+					g.fillOval(1 + x*PIXEL_PER_CELL, 1 + y*PIXEL_PER_CELL, PIXEL_PER_CELL, PIXEL_PER_CELL);
+				} 
+			}
+		} 
 	}
 
 }
