@@ -7,20 +7,15 @@ in no particular order:
 
 * stop biasing towards one species when breeding 
 
-* inheritable traits when breading 
+* inheritable traits when breeding 
 
-* species determined traits
+** species determined traits
 	* movement
 	* health
 	* hunger
 
-* generalize how many species I can have
-* implement a better way to display more than 3 species
-	(health display with opacity?)
-
 * better hunger algorithm
 * better feeding algorithm
-* abstract these away into critter
 
 * timer correct with pause
 
@@ -35,7 +30,11 @@ in no particular order:
 * data about # of critters in each species 
 * plot data
 
-*optionally wrap around the world
+* optionally wrap around the world
+
+* species that don't move around (grass and water)
+
+*move art code to TMap
 
 
-DONE: 6
+DONE: 10

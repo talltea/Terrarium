@@ -15,6 +15,7 @@
 
 import java.util.*;
 import java.awt.*;
+import java.util.Random;
 
 public class Critter {
     private int health;
@@ -26,21 +27,28 @@ public class Critter {
     private int species;    // larger numbers = higher on food chain
 
     public static int nSpecies = 3;
+    public static Color[] speciesColors;
 
+    private static Random random;
 
+    public static void initializeCritterSpecies() {
+        random = new Random();
+        speciesColors = new Color[nSpecies];
+        for (int i = 0; i < speciesColors.length; i++) {
+            float r = random.nextFloat();
+            float g = random.nextFloat();
+            float b = random.nextFloat();
+            speciesColors[i] = new Color(r, g, b); 
+        }
+        System.out.println("colors init");
+    }
 
     public Critter(int species) {
 		health = 0;
         strength = 0;
         fertility = 0;
         this.species = species;
-        if (species == 0) {
-            color = Color.GREEN;   
-        } else if (species == 1) {
-            color = Color.RED;
-        } else {
-            color = Color.BLUE;
-        }
+        color = speciesColors[species];
     }
 
     public void setHealth(int health) {

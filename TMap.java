@@ -19,6 +19,8 @@ public class TMap {
 	private Critter[][] map;
 	private Critter[][] mapUpdated;
 
+	private int[] speciesStats;
+
 	private boolean DEBUG = false;
 	private Random random;
 
@@ -32,6 +34,7 @@ public class TMap {
 		this.height = height;
 		map = new Critter[height][width];
 		mapUpdated = new Critter[height][width];
+		speciesStats = new int[Critter.nSpecies];
 
 		if (DEBUG) random = new Random(0);	// same seq every time
 		else random = new Random(); // diff seq each game
@@ -164,11 +167,6 @@ public class TMap {
 		}
 	}
 
-	private int hungerLoss = 3;
-	private void hungerHealth(Critter crit) {
-		int health = crit.getHealth();
-		crit.setHealth(health-hungerLoss);
-	}
 
 	private void moveCritter(int x, int y) {
 		int dX = randInt(-1, 1);

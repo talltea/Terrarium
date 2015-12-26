@@ -278,6 +278,7 @@ public class Terrarium extends JComponent implements MouseListener{
 
 		// cheap way to reset the board state
 		map = new TMap(WIDTH, HEIGHT);
+		Critter.initializeCritterSpecies();
 		// Set mode based on checkbox at start of game
 		testMode = testButton.isSelected();
 			
