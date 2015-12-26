@@ -46,13 +46,7 @@ public class Critter {
     public void setHealth(int health) {
         this.health = health;
         if (health > 0) {
-            if (species == 0) {
-                color = new Color((health*10)%255, 10, 10); 
-            } else if (species == 1) {
-                color = new Color(10, (health*10)%255, 10);
-            } else {
-                color = new Color(10, 10, (health*10)%255);
-            }
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), health*10);
         } else {
             color = Color.BLACK;
         }
