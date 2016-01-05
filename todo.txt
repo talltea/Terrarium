@@ -7,10 +7,7 @@ in no particular order:
 
 * stop biasing towards one species when breeding 
 
-* inheritable traits when breeding 
-
-* species determined traits
-	* movement
+**** inheritable traits when breeding 
 
 * better hunger algorithm
 * better feeding algorithm
@@ -22,9 +19,6 @@ in no particular order:
 
 * movements more interesting than random walk
 
-* code in constants for critters 
-* constants for world (so that I don't have to recompile each time for screen size)
-
 * data about # of critters in each species 
 * plot data
 
@@ -32,5 +26,7 @@ in no particular order:
 
 * species that don't move around (grass and water)
 
+* fix random number generators 
 
-DONE: 13
+
+DONE: 15

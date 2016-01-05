@@ -51,11 +51,12 @@ public class Critter {
             float b = random.nextFloat();
             speciesColors[i] = new Color(r, g, b); 
             speciesHungerLoss[i] = randInt(1, 5);
-            speciesMovement[i] = randInt(0, 5);
+            speciesMovement[i] = randInt(1, 5);
             speciesMaxHealth[i] = randInt(5, 25);
             speciesStrength[i] = randInt(1, 5);
             speciesFertility[i] = randInt(1, 5);
-         }
+            System.out.println(speciesColors[i] + " " + speciesHungerLoss[i] + " " + speciesMovement[i] +" " + speciesMaxHealth[i] + " " + speciesStrength[i] + " " + speciesFertility[i]);
+        }
     }
 
     private static int randInt(int min, int max) {
@@ -77,7 +78,7 @@ public class Critter {
         randCrit.setStrength( randInt(1, speciesStrength[species]) );
         randCrit.setFertility( randInt(1, speciesFertility[species]) );
         randCrit.setHungerLoss( randInt(1, speciesHungerLoss[species]) );
-        randCrit.setMovement( randInt(0, speciesMovement[species]));
+        randCrit.setMovement( randInt(1, speciesMovement[species]));
         return randCrit;
     }
 
@@ -161,7 +162,7 @@ public class Critter {
 
     public boolean moveThisTurn() {
         if (movement==0) return false;
-        return (1/movement) < random.nextFloat();
+        return (1.0/movement) < random.nextFloat();
     }
 
     public void setMaxHealth() {
