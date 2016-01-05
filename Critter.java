@@ -160,6 +160,7 @@ public class Critter {
     }
 
     public boolean moveThisTurn() {
+        if (movement==0) return false;
         return (1/movement) < random.nextFloat();
     }
 
