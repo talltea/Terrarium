@@ -23,7 +23,7 @@ public class TMap {
 	private int[] speciesStats;
 
 	private boolean DEBUG = false;
-	private Random random;
+	private static Random random;
 
 
 	/*
@@ -33,12 +33,10 @@ public class TMap {
 	public TMap(int width, int height) {
 		this.width = width;
 		this.height = height;
+		random = Terrarium.random;
 		map = new Critter[height][width];
 		mapUpdated = new Critter[height][width];
 		speciesStats = new int[Critter.nSpecies];
-
-		if (DEBUG) random = new Random(0);	// same seq every time
-		else random = new Random(); // diff seq each game
 
 		for(int row = 0; row < height; row++) {
 			for(int col = 0; col < width; col++) {

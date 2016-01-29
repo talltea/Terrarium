@@ -40,7 +40,7 @@ public class Terrarium extends JComponent implements MouseListener{
 	// State of the game
 	protected boolean gameOn;	// true if we are playing
 	protected long startTime;	// used to measure elapsed time
-	protected Random random;	// the random generator
+	protected static Random random;	// the random generator
 
 	// Controls
 	protected JLabel timeLabel;
@@ -258,14 +258,14 @@ public class Terrarium extends JComponent implements MouseListener{
 		enableButtons();
 		timer.stop();
 
+		// Set mode based on checkbox at start of game
+		testMode = testButton.isSelected();
+		if (testMode) random = new Random(0);	// same seq every time
+		else random = new Random(); // diff seq each game
+
 		// cheap way to reset the board state
 		map = new TMap(WIDTH, HEIGHT);
 		Critter.initializeCritterSpecies();
-		// Set mode based on checkbox at start of game
-		testMode = testButton.isSelected();
-			
-		if (testMode) random = new Random(0);	// same seq every time
-		else random = new Random(); // diff seq each game
 		
 		populateWorldRandomly();
 		//populateLonelyWorld();

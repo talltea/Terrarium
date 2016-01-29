@@ -38,7 +38,7 @@ public class Critter {
     private static Random random;
 
     public static void initializeCritterSpecies() {
-        random = new Random();
+        random = Terrarium.random;
         speciesColors = new Color[nSpecies];
         speciesHungerLoss = new int[nSpecies];
         speciesMovement = new int[nSpecies];
